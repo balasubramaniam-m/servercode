@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Get All Books</title>
+    <link rel="stylesheet" href="style.css"></link>
+    <script>
+
+    	function initialLoad()
+    	{
+    		getBooks('AllBookTable');
+    		var submitedForm = document.getElementById("fetchBookForm");
+    		submitedForm.addEventListener("submit", function(event) 
+	    	{
+	    		console.log("event called");
+	    		event.preventDefault();
+	    		getBooks('bookFetchByUser');
+	    	});
+    	}
+    	function getBooks(appendOnElementId)
+    	{
+    		var toAppendElement =  document.getElementById(appendOnElementId);
+    		toAppendElement.style.display = 'block';
+    		var url = 'http://localhost:9000/getBooks';
+    		var bookId = document.getElementById('bookId').value;
+    		if(!(bookId == undefined || bookId == null || bookId.length == 0))
+    		{
+    			url = 'http://localhost:9000/getBook' + '/' + bookId;
+    		}
+    		console.log('url to hit :' + url);
+    		fetch(url,{
+	            method: 'GET',
+	            //mode: 'no-cors'
+	        })
+	        .then(response => {
+	            if (!response.ok) 
+	            {
+	                console.log("error");
+	            }
+	            return response.json(); 
+	        })
+	      .then(data => {
+	        console.log(data);
+	        console.log(typeof data);
+	        console.log()
+	        var resultArr = data;
+	        const parentElement = document.body;
+	        var table = undefined;
+	        if(resultArr !== null && Array.isArray(resultArr) && resultArr.length > 0)
+	        {
+	        	for(var i=0;i<resultArr.length;i++)
+		        {
+		        	var resultObj = resultArr[i];
+		        	var headings = Object.keys(resultArr[0]);
+		        	if(i==0)
+		        	{
+		        		table = document.createElement('table');
+		        		var headingrow =  document.createElement('tr');
+		        		for(var j=0;j<headings.length;j++)
+		        		{
+		        			var heading = document.createElement('th');
+		        			heading.textContent = headings[j];
+		        			headingrow.appendChild(heading);
+		        			table.appendChild(headingrow);
+		        		}
+		        	}
+		        	var row =  document.createElement('tr');
+		        	for(var j=0;j<headings.length;j++)
+		    		{
+		    			var bookData = document.createElement('td');
+		    			bookData.textContent = (resultObj[headings[j]] == null || resultObj[headings[j]] == undefined) ? 
+		    									'not available' : resultObj[headings[j]];
+		    			row.appendChild(bookData);
+		    		}
+		        	table.appendChild(row);
+		        }
+		        toAppendElement.appendChild(table);
+	        }
+	        else if(resultArr !== null && typeof resultArr === 'object' && Object.keys(resultArr).length !== 0)
+	        {
+	        	toAppendElement.innerHTML = '';
+	        	var h3El = document.createElement('h3');
+	        	h3El.textContent = 'Book Details ...';
+	        	toAppendElement.appendChild(h3El);
+	        	var resultObj = data;
+	        	var headings = Object.keys(resultObj);
+        		table = document.createElement('table');
+        		var headingrow =  document.createElement('tr');
+        		for(var j=0;j<headings.length;j++)
+        		{
+        			var heading = document.createElement('th');
+        			heading.textContent = headings[j];
+        			headingrow.appendChild(heading);
+        			table.appendChild(headingrow);
+        		}
+	        	var row =  document.createElement('tr');
+	        	for(var j=0;j<headings.length;j++)
+	    		{
+	    			var bookData = document.createElement('td');
+	    			bookData.textContent = (resultObj[headings[j]] == null || resultObj[headings[j]] == undefined) ? 
+	    									'not available' : resultObj[headings[j]];
+	    			row.appendChild(bookData);
+	    		}
+	        	table.appendChild(row);
+	        	toAppendElement.appendChild(table);
+	        }
+	        else
+	        {
+	        	toAppendElement.innerHTML = '';
+	        	var h2El = document.createElement("h2");
+	        	h2El.textContent = 'No book available';
+	        	toAppendElement.appendChild(h2El);
+	        }
+	      });
+    	}
+    </script>
+</head>
+<body onload="initialLoad()">
+    <div id="AllBookTable">
+    	 <h1>Hi ! Here is the list of all books</h1>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <form id="fetchBookForm">
+		<label>Book id : </label>
+		<input type="text" name="bookId" id="bookId"  class="textbox">
+		<button type="submit" class="getButton">Get Book</button>
+	</form>
+    <div id="bookFetchByUser" style="display: none">
+    </div>
+</body>
+</html>

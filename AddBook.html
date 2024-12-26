@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Add New Book</title>
+	<link rel="stylesheet" href="style.css"></link>
+	<script type="text/javascript">
+
+		function initialLoad()
+    	{
+    		var newBookForm = document.getElementById("addBookForm");
+    		newBookForm.addEventListener("submit", function(event) 
+	    	{
+	    		console.log("event called");
+	    		event.preventDefault();
+	    		addBook();
+	    	});
+    	}
+
+		const addBook = function()
+		{
+			var id = document.getElementById("bookId").value;
+			var name = document.getElementById("bookName").value;
+			var yop = document.getElementById("bookYop").value;
+			var des = document.getElementById("bookDesc").value;
+			const bookData = 
+			{
+			    "id": id,
+			    "name": name,
+			    "yop": yop,
+			    "des": des
+			};
+			fetch('http://localhost:9000/addBook', 
+			{
+			    method: 'POST',
+			    headers: 
+			    {
+			        'Content-Type': 'application/json',
+			    },
+			    body: JSON.stringify(bookData)
+			})
+	    	.then(response => {
+	    		console.log("response ..."+response);
+	    		var resultElmt = document.getElementById("addBookResult");
+	    		resultElmt.style.display = 'block';
+	    		if(response.ok)
+	    		{
+	    			resultElmt.innerText = "Book Added Successfully";
+	    		}
+	    		else
+	    		{
+	    			resultElmt.innerText = "Error in Book Addition";
+	    		}
+	    	});
+
+	    	document.getElementById("bookId").value = '';
+	    	document.getElementById("bookName").value = '';
+	    	document.getElementById("bookYop").value = '';
+	    	document.getElementById("bookDesc").value = '';
+		}
+	</script>
+</head>
+<body  onload="initialLoad()">
+<h3>Add New Book / Update Existing Book ... !</h3>
+<form id="addBookForm">
+	<table>
+		<tr>
+			<td>
+				<label>Book Id</label>	
+			</td>
+			<td>
+				<input type="text" name="bookId" id="bookId" class="textbox">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Book Name</label>
+			</td>
+			<td>
+				<input type="text" name="bookName" id="bookName" class="textbox">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Book Yop</label>
+			</td>
+			<td>
+				<input type="text" name="bookYop" id="bookYop" class="textbox">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Book Desc</label>
+			</td>
+			<td>
+				<input type="text" name="bookDesc" id="bookDesc" class="textbox">
+			</td>
+		</tr>
+	</table>
+	<br>
+	<button type="submit" class="addButton">Add / Update</button>
+</form>
+
+<p id="addBookResult" style="display: none"></p> 
+</body>
+</html>

@@ -1,0 +1,47 @@
+table, th, td 
+{
+	 border: 1px solid;
+	 border-collapse: collapse;
+	 padding: 5px 10px;
+}
+
+.deleteButton
+{
+	padding: 5px 10px;
+    background-color: red;
+    color: white;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.addButton
+{
+	padding: 5px 10px;
+    background-color: green;
+    color: white;
+    border: 2px solid green;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.getButton
+{
+	padding: 5px 10px;
+    background-color: green;
+    color: white;
+    border: 2px solid green;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.textbox
+{
+	border-style : 1px solid;
+	border-top: none;
+	border-right: none;
+	border-left: none;
+}
